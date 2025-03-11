@@ -23,10 +23,26 @@ def draw_amongus(window, color, x, y, scale=1, flip= False):
 
 # SHAPE CLASSES
 
-class Line():
+class Shape():
+
+    def __init__(self, window, color, width=0):
+        self.window = window
+        self.color = color
+        self.width = width
+
+    def change_color(self, new_color):
+        if not new_color is tuple:
+            raise ValueError("Needs a tuple with 3 int values (0-255, 0-255, 0-255)")
+        
+        self.color = new_color
+
+    def change_width(self, new_width):
+        self.width = new_width
+
+class Line(Shape):
 
     def __init__(self,window, color, start_coord, end_coord, width):
-        self.window = window
+        super().__init__(window, color, width)
         self.color = color
         self.start = start_coord
         self.end = end_coord
@@ -35,49 +51,45 @@ class Line():
     def draw(self):
         pygame.draw.line(self.window,self.color, self.start, self.end, self.width)
 
-class Rectangle():
+class Rectangle(Shape):
 
-    def __init__(self, window, color, x, y ,width=1, length=1, line_width=0):
-        self.rect = pygame.Rect(x,y,width,length)
-        self.window = window
-        self.color = color
-        self.line_width = line_width
+    def __init__(self, window, color, x, y ,side_width=1, side_length=1, line_width=0):
+        super().__init__(window,color, line_width)
+        self.rect = pygame.Rect(x,y,side_width,side_length)
 
     def draw(self):
-        pygame.draw.rect(self.window, self.color, self.rect, self.line_width)
+        pygame.draw.rect(self.window, self.color, self.rect, self.width)
 
 class Square(Rectangle):
 
     def __init__(self, window, color, x, y, side_length = 1, line_width = 0):
         super().__init__(window, color, x, y, side_length, side_length, line_width)
 
-class Circ():
+class Circ(Shape):
     
     def __init__(self, window, color, center_coords, radius, width=0):
-        self.window = window
-        self.color = color
+        super().__init__(window,color, width)
         self.center = center_coords
         self.r = radius
-        self.width = width
+
 
     def draw(self):
         pygame.draw.circle(self.window, self.color, self.center, self.r, self.width)
 
 class Ellipse(Rectangle):
 
-    def __init__(self, window, color, x, y, width=1, length=1, line_width = 0):
-        super().__init__(window, color, x, y, width, length, line_width)
+    def __init__(self, window, color, x, y, side_width=1, side_length=1, line_width = 0):
+        super().__init__(window, color, x, y, side_width, side_length, line_width)
 
     def draw(self):
-        pygame.draw.ellipse(self.window, self.color, self.rect, self.line_width)
+        pygame.draw.ellipse(self.window, self.color, self.rect, self.width)
 
-class Polygon():
+class Polygon(Shape):
 
     def __init__(self,window, color, points, width=0):
-        self.window = window
-        self.color = color
+        super().__init__(window,color,width)
         self.points = points
-        self.width = width
+
 
     def draw(self):
         pygame.draw.polygon(self.window,self.color,self.points,self.width)

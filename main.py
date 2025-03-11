@@ -88,7 +88,11 @@ def main(): # MAIN FUNCTION
 
         if the_code[:len(lookingforcode)] == lookingforcode:
             if the_code == lookingforcode:
-                print("yippee")
+                border.change_color(rand_color)
+
+        else:
+            lookingforcode = ""
+
 
         textbox.update_text(text)
         
