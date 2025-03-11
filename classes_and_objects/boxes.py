@@ -9,7 +9,7 @@ pygame.init()
 
 class Text_box():
 
-    def __init__(self, window, x, y, width, height, text, font="Comic Sans MS",text_size = 24, draw_rect = True, centered = True):
+    def __init__(self, window, x, y, width, height, text, text_color = WHITE,rect_color = THAYER_GREEN,font="Comic Sans MS",text_size = 24, draw_rect = True, centered = True):
         self.rect = pygame.Rect(x,y,width,height)
         self.window = window
 
@@ -19,9 +19,11 @@ class Text_box():
         self.width = width
 
         self.draw_rect = draw_rect
+        self.rect_color = rect_color
         self.centered = centered
 
         self.text = text
+        self.text_color = text_color
         self.text_size = text_size
         self.font = font
         self.text_font = pygame.font.SysFont(font, text_size)
@@ -32,6 +34,20 @@ class Text_box():
         else:
             self.text_font = pygame.font.SysFont(new_font, self.text_size)
 
+        self.font = new_font
+
+    def change_font_color(self, new_color):
+        if not new_color is tuple:
+            raise ValueError("Needs a tuple with 3 int values (0-255, 0-255, 0-255)")
+        
+        self.text_color = new_color
+
+    def change_rect_color(self, new_color):
+        if not new_color is tuple:
+            raise ValueError("Needs a tuple with 3 int values (0-255, 0-255, 0-255)")
+        
+        self.rect_color = new_color
+
     def italicize(self, italicize = True):
         if not (self.font[-4:] == ".ttf" or self.font[-4:] == ".otf"):
             self.text_font = pygame.font.SysFont(self.font, self.text_size, italic=italicize)
@@ -40,15 +56,22 @@ class Text_box():
         if not (self.font[-4:] == ".ttf" or self.font[-4:] == ".otf"):
             self.text_font = pygame.font.SysFont(self.font, self.text_size, bold=boldize)
 
+    def update_text(self, new_text):
+        self.text = new_text
+
     def draw_textbox(self):
-        text = self.text_font.render(self.text, True, WHITE)
+        text = self.text_font.render(self.text, True, self.text_color)
         if self.draw_rect:
-            pygame.draw.rect(self.window, (50, 200, 50), self.rect)
+            pygame.draw.rect(self.window, self.rect_color, self.rect)
         if self.centered:
             text_rect = text.get_rect(center=self.rect.center)
             self.window.blit(text, text_rect)
         else:
             self.window.blit(text, [self.x,self.y])
+
+    def draw_text(self):
+        text = self.text_font.render(self.text, True, WHITE)
+        self.window.blit(text, [self.x,self.y])
 
 class Image_box():
 
